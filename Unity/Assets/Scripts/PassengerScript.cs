@@ -12,8 +12,9 @@ public class PassengerScript : MonoBehaviour {
     int count = 0;
     private GameScript gameScript;
     private float startTime = 0.005f;
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         GameObject gameController = GameObject.Find("GameController");
         if (gameController!=null) {
             gameScript = gameController.GetComponent<GameScript>();
@@ -75,6 +76,7 @@ public class PassengerScript : MonoBehaviour {
                 if (count > 3 && Vector3.Distance(Input.mousePosition, transform.position) < 20)
                 {
                     dragOn = true;
+
                 }
                 else if(count <= 3)
                 {
@@ -96,16 +98,28 @@ public class PassengerScript : MonoBehaviour {
             if (dragOn) {
                 Vector3 pos = Input.mousePosition;
                 pos.z = 0;
-                //transform.position = pos;
+                ////transform.position = pos;
                 Vector2 deltaPos = Input.mousePosition - transform.position;
-                deltaPos.Normalize();
+                ////deltaPos.Normalize();
                 //GetComponent<Rigidbody2D>().AddForce(deltaPos*1000);
-                GetComponent<Rigidbody2D>().velocity = deltaPos*1000;
+                if (deltaPos.magnitude > 20)
+                {
+                    GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
+
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+                }
+
 
             }
             else
             {
                 GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+
             }
 #else
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
@@ -130,9 +144,36 @@ public class PassengerScript : MonoBehaviour {
                     touch = false;
                 }
             }
-             if (dragOn) {
+
+            if (dragOn) {
+                //Vector3 pos = Input.mousePosition;
+                //pos.z = 0;
+
                 Vector3 pos = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0);
                 transform.position = pos;//Camera.main.ScreenToWorldPoint(pos);
+
+                ////transform.position = pos;
+                Vector2 deltaPos = Input.mousePosition - transform.position;
+                ////deltaPos.Normalize();
+                //GetComponent<Rigidbody2D>().AddForce(deltaPos*1000);
+                if (deltaPos.magnitude > 20)
+                {
+                    GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
+
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+                }
+
+
+            }
+            else
+            {
+                GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+
             }
 #endif
         }
