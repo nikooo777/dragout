@@ -35,25 +35,16 @@ public class PassengerScript : MonoBehaviour {
         Vector2 startPosition = new Vector2(transform.position.x, transform.position.y);
         float rate = 0.5f;
         float t = 0.0f;
-        while (t < 1.0)//Mathf.Abs(transform.position.y-position.y) >= 1)
+        while (t < 1.0)
         {
             // make the character desappear
-            //transform.position = Vector2.Lerp(transform.position, new Vector2(transform.position.x, position.y), startTime);
-            //yield return null;
             t += Time.deltaTime * rate;
             transform.position = Vector3.Lerp(startPosition, new Vector2(transform.position.x, position.y), Mathf.SmoothStep(0.0f, 1.0f, t));
             yield return null;
         }
         t = 0.0f;
-        /*
-        while (t < 1.0)
-        {
-            t += Time.deltaTime * rate;
-            transform.position = Vector3.Lerp(startPosition, new Vector2(transform.position.x, position.y), Mathf.SmoothStep(0.0f, 1.0f, t));
-            yield return null;
-        }*/
         startPosition= new Vector2(transform.position.x, transform.position.y);
-        while (t < 1.0)//Mathf.Abs(transform.position.x - position.x) >= 1)
+        while (t < 1.0)
         {
             t += Time.deltaTime * rate;
             // make the character desappear
@@ -61,8 +52,21 @@ public class PassengerScript : MonoBehaviour {
             yield return null;
         }
         seated = true;
-        Debug.Log("SEATED");
         yield return new WaitForSeconds(1f);
+    }
+
+    private void DragOnState(Vector3 position) {
+        Vector2 deltaPos = position - transform.position;
+        if (deltaPos.magnitude > 20)
+        {
+            GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
+
+        }
+        else
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+        }
     }
 
 	// Update is called once per frame
@@ -94,14 +98,8 @@ public class PassengerScript : MonoBehaviour {
                     touch = false;
                 }
             }
-            //Debug.Log(Vector3.Distance(Input.mousePosition, transform.position));
             if (dragOn) {
-                Vector3 pos = Input.mousePosition;
-                pos.z = 0;
-                ////transform.position = pos;
-                Vector2 deltaPos = Input.mousePosition - transform.position;
-                ////deltaPos.Normalize();
-                //GetComponent<Rigidbody2D>().AddForce(deltaPos*1000);
+                /*Vector2 deltaPos = Input.mousePosition - transform.position;
                 if (deltaPos.magnitude > 20)
                 {
                     GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
@@ -112,7 +110,8 @@ public class PassengerScript : MonoBehaviour {
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
                 }
-
+                */
+                DragOnState(Input.mousePosition);
 
             }
             else
@@ -146,6 +145,7 @@ public class PassengerScript : MonoBehaviour {
             }
 
             if (dragOn) {
+            /*
                 //Vector3 pos = Input.mousePosition;
                 //pos.z = 0;
 
@@ -166,7 +166,9 @@ public class PassengerScript : MonoBehaviour {
                     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
                 }
-
+            */
+            Vector3 pos = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0);
+            DragOnState(pos);
 
             }
             else

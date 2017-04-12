@@ -32,7 +32,6 @@ public class GameScript : MonoBehaviour {
 
     public SeatScript getSeat() {
         bool searchSeat = true;
-        Vector2 position = new Vector2();
         int index = 0;
         while (searchSeat) {
             index = (int)((seats.Length-1)*Random.value);
@@ -40,7 +39,6 @@ public class GameScript : MonoBehaviour {
             {
                 seats[index].free = false;
                 searchSeat = false;
-                //position= seats[index].GetComponent<RectTransform>().position;
             }
         }        
         return seats[index];
