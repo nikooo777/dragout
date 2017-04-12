@@ -49,6 +49,7 @@ public class PassengerScript : MonoBehaviour
         seat.free = true;
         audioDrag.Stop();
         audioDead.Play();
+        GameScript.countSeats--;
         Destroy(gameObject);
 
     }
