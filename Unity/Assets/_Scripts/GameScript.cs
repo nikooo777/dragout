@@ -48,6 +48,7 @@ public class GameScript : MonoBehaviour {
         if(countSeats>=seats.Length)
         {
             searchSeat = false;
+            AdManager.Instance.HideBanner();
             SceneManager.LoadScene(3);
         }
 

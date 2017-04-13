@@ -81,6 +81,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.Plugins.csproj">
+      <Project>{D1FDB199-0FB7-099D-3771-C6A942E4E326}</Project>
+      <Name>Unity.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\_Scripts\AdManager.cs" />
     <Compile Include="Assets\_Scripts\DeathScript.cs" />
     <Compile Include="Assets\_Scripts\GameScript.cs" />
     <Compile Include="Assets\_Scripts\GameState.cs" />
@@ -88,6 +95,12 @@
     <Compile Include="Assets\_Scripts\PassengerScript.cs" />
     <Compile Include="Assets\_Scripts\QuitHandler.cs" />
     <Compile Include="Assets\_Scripts\SeatScript.cs" />
+    <Compile Include="Assets\_Scripts\ShowVideoAd.cs" />
+    <Compile Include="Assets\_Scripts\showad.cs" />
+    <Compile Include="Assets\admobdemo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

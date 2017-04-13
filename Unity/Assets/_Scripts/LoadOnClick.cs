@@ -9,6 +9,7 @@ public class LoadOnClick : MonoBehaviour
 
     public void LoadScene(int level)
     {
+        AdManager.Instance.HideBanner();
         SceneManager.LoadScene(level);
     }
 }
