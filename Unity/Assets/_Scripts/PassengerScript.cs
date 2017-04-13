@@ -15,17 +15,24 @@ public class PassengerScript : MonoBehaviour
     private GameScript gameScript;
     private float startTime = 0.005f;
     public Image image;
-
+    private float radius;
+    private int audioIndex = 0;
     public AudioSource audioHit;
-    public AudioSource audioDrag;
+    public AudioSource[] audioDrag;
     public AudioSource audioDead;
 
     void Awake()
     {
+        radius = GetComponent<RectTransform>().sizeDelta.x/2;
         image = GetComponent<Image>();
         audioHit = GameObject.Find("hit").GetComponent<AudioSource>();
-        audioDrag = GameObject.Find("drag").GetComponent<AudioSource>();
-        audioDrag.loop = true;
+        audioDrag = new AudioSource[3];
+        audioDrag[0] = GameObject.Find("drag").GetComponent<AudioSource>();
+        audioDrag[1] = GameObject.Find("drag2").GetComponent<AudioSource>();
+        audioDrag[2] = GameObject.Find("drag3").GetComponent<AudioSource>();
+        for (int i=0;i<audioDrag.Length;i++) {
+            audioDrag[i].loop = true;
+        }
         audioDead = GameObject.Find("dead").GetComponent<AudioSource>();
     }
 
@@ -47,7 +54,7 @@ public class PassengerScript : MonoBehaviour
         GameState.points++;
         GameState.checkLevel();
         seat.free = true;
-        audioDrag.Stop();
+        audioDrag[audioIndex].Stop();
         audioDead.Play();
         GameScript.countSeats--;
         Destroy(gameObject);
@@ -82,7 +89,7 @@ public class PassengerScript : MonoBehaviour
     private void DragOnState(Vector3 position)
     {
         Vector2 deltaPos = position - transform.position;
-        if (deltaPos.magnitude > 20)
+        if (deltaPos.magnitude > radius)
         {
             GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
 
@@ -107,10 +114,11 @@ public class PassengerScript : MonoBehaviour
             //mouse event
             if (Input.GetMouseButtonDown(0))
             {
-                if (count >= 3 && Vector3.Distance(Input.mousePosition, transform.position) < 20)
+                if (count >= 3 && Vector3.Distance(Input.mousePosition, transform.position) < radius)
                 {
                     dragOn = true;
-                    audioDrag.Play();
+                    audioIndex = (int)Mathf.Round(Random.value * (audioDrag.Length - 1));
+                    audioDrag[audioIndex].Play();
                 }
                 //else if (count <= 3)
                 //{
@@ -122,11 +130,11 @@ public class PassengerScript : MonoBehaviour
                 if (count >= 3)
                 {
                     dragOn = false;
-                    audioDrag.Stop();
+                    audioDrag[audioIndex].Stop();
                 }
                 else
                 {
-                    if (Vector3.Distance(Input.mousePosition, transform.position) < 20)
+                    if (Vector3.Distance(Input.mousePosition, transform.position) < radius)
                     {
                         count++;
                         audioHit.Play();
@@ -137,18 +145,6 @@ public class PassengerScript : MonoBehaviour
             }
             if (dragOn)
             {
-                /*Vector2 deltaPos = Input.mousePosition - transform.position;
-                if (deltaPos.magnitude > 20)
-                {
-                    GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
-
-                }
-                else
-                {
-                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-                }
-                */
                 DragOnState(Input.mousePosition);
 
             }
@@ -161,10 +157,11 @@ public class PassengerScript : MonoBehaviour
 #else
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                if (count >= 3 && Vector3.Distance(Input.GetTouch(0).position, transform.position) < 20)
+                if (count >= 3 && Vector3.Distance(Input.GetTouch(0).position, transform.position) < radius)
                 {
                     dragOn = true;
-                    audioDrag.Play();
+                    audioIndex= (int)(Random.value*(audioDrag.Length-1));
+                    audioDrag[audioIndex].Play();
 
                 }
                 //else {
@@ -177,11 +174,11 @@ public class PassengerScript : MonoBehaviour
                 if (count >= 3)
                 {
                     dragOn = false;
-                    audioDrag.Stop();
+                    audioDrag[audioIndex].Stop();
 
                 }
                 else {
-                    if(Vector3.Distance(Input.GetTouch(0).position, transform.position) < 20)
+                    if(Vector3.Distance(Input.GetTouch(0).position, transform.position) < radius)
                     {
                         count++;
                         audioHit.Play();
@@ -191,28 +188,6 @@ public class PassengerScript : MonoBehaviour
             }
 
             if (dragOn) {
-            /*
-                //Vector3 pos = Input.mousePosition;
-                //pos.z = 0;
-
-                Vector3 pos = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0);
-                transform.position = pos;//Camera.main.ScreenToWorldPoint(pos);
-
-                ////transform.position = pos;
-                Vector2 deltaPos = Input.mousePosition - transform.position;
-                ////deltaPos.Normalize();
-                //GetComponent<Rigidbody2D>().AddForce(deltaPos*1000);
-                if (deltaPos.magnitude > 20)
-                {
-                    GetComponent<Rigidbody2D>().velocity = deltaPos.normalized * 1500;
-
-                }
-                else
-                {
-                    GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-                }
-            */
             Vector3 pos = new Vector3(Input.GetTouch(0).position.x, Input.GetTouch(0).position.y, 0);
             DragOnState(pos);
 
